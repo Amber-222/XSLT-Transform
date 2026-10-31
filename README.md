@@ -51,31 +51,31 @@ Instead of direct browser-to-API calls (which can trigger local CORS/port/SSL bl
 Additional endpoints (`convert-so-to-xml` and `convert-ack-to-xml`) allow users to upload expected JSON outputs and instantly download their converted XML equivalents.
 
 ## 📱 How the System Works
-Upload a raw Sales Order JSON file (SO.json) through the MVC frontend
-The API receives the file and applies XSLT transformations
-Two standardized JSON files are generated with dynamic names
-Files are saved to the API’s wwwroot/processed folder
-The MVC frontend downloads both files via a secure proxy
-Optionally convert the generated JSON files to XML
+- Upload a raw Sales Order JSON file (SO.json) through the MVC frontend
+- The API receives the file and applies XSLT transformations
+- Two standardized JSON files are generated with dynamic names
+- Files are saved to the API’s wwwroot/processed folder
+- The MVC frontend downloads both files via a secure proxy
+- Optionally convert the generated JSON files to XML
 
 ## Main Features
- 📤 Process Sales Order JSON
- 🔄 XSLT Transformation (Sales Order + Acknowledgment)
- 📁 Dynamic file naming
- 💾 Server-side file drop (wwwroot/processed)
- ⬇️ Secure proxy downloads
- 📄 Convert Sales Order JSON → XML
- 📄 Convert Acknowledgment JSON → XML
+ - 📤 Process Sales Order JSON
+ - 🔄 XSLT Transformation (Sales Order + Acknowledgment)
+ - 📁 Dynamic file naming
+ - 💾 Server-side file drop (wwwroot/processed)
+ - ⬇️ Secure proxy downloads
+ - 📄 Convert Sales Order JSON → XML
+ - 📄 Convert Acknowledgment JSON → XML
 
 ## 🛠 Tech StackBackend API (XSLT_Transform)
- Framework: ASP.NET Core Web API (.NET)
- Processing Engine: Custom TransformService (XML/XSLT)
- Data Formatting: Newtonsoft.Json (JObject)
- File Management: Static Files Middleware (app.UseStaticFiles())
- Security: CORS policy (AllowAll)
+ - Framework: ASP.NET Core Web API (.NET)
+ - Processing Engine: Custom TransformService (XML/XSLT)
+ - Data Formatting: Newtonsoft.Json (JObject)
+ - File Management: Static Files Middleware (app.UseStaticFiles())
+ - Security: CORS policy (AllowAll)
 
 ## Frontend Client (SalesOrderProcessing)
- Framework: ASP.NET Core MVC
- UI: Razor Pages + Bootstrap
- Networking: HttpClient + multipart form-data
- Proxy Download: DownloadFromApi controller
+ - Framework: ASP.NET Core MVC
+ - UI: Razor Pages + Bootstrap
+ - Networking: HttpClient + multipart form-data
+ - Proxy Download: DownloadFromApi controller
