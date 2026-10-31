@@ -39,7 +39,7 @@ namespace SalesOrderProcessing.Controllers
             using var fileStream = order.uploadedFile.OpenReadStream();
             using var streamData = new StreamContent(fileStream);
             streamData.Headers.ContentType = new MediaTypeHeaderValue("application/json");
-            data.Add(streamData, "file", order.uploadedFile.FileName);
+            data.Add(streamData, "jsonfile", order.uploadedFile.FileName);
 
             var response = await _httpClient.PostAsync($"{_apiURL}/process", data); //connect to api endpoint to porcess json file
 
@@ -50,10 +50,10 @@ namespace SalesOrderProcessing.Controllers
 
                 //get data and fields from json fiel
                 order.successMessage = json["message"]?.ToString();
-                order.SOFileName = json["outputs"]?[0]?["FileName"].ToString();
-                order.SOData = json["message"]?[0]?["Content"].ToString();
-                order.ackFile = json["message"]?[1]?["FileName"].ToString();
-                order.ackData = json["message"]?[1]?["Content"].ToString();
+                order.SOFileName = json["outputs"]?[0]?["fileName"]?.ToString();
+                order.SOData = json["outputs"]?[0]?["content"]?.ToString();
+                order.ackFile = json["outputs"]?[1]?["fileName"]?.ToString();
+                order.ackData = json["outputs"]?[1]?["content"]?.ToString();
             }
             else
             {
@@ -85,21 +85,29 @@ namespace SalesOrderProcessing.Controllers
                 var bytes = await response.Content.ReadAsStreamAsync();
                 string fileName = "output.xml";
 
-                if (response.Headers.TryGetValues("Content-Disposition", out var values)) 
+                if (response.Content.Headers.TryGetValues("Content-Disposition", out var values)) 
                 {
                     foreach (var val in values)
                     {
-                        if (val.Contains("filename="))
+                        var parts = val.Split(';'); //there are 2 filename headers in the request
+
+                        foreach (var part in parts)
                         {
-                            fileName = val.Split("filename=")[1].Replace("\"", "").Trim();
+                            var trimmed = part.Trim();
+                            //if (part.Trim().StartsWith("filename="))
+                            //{
+                            //    fileName = part.Trim().Substring("filename=".Length).Replace("\"", "").Trim();
+                            //}
+                            if (trimmed.StartsWith("filename=", StringComparison.OrdinalIgnoreCase))
+                            {
+                                fileName = trimmed.Substring("filename=".Length).Trim('"');
+                            }
                         }
-                    }
+                    }                    
                 }
-
-                return File(bytes, "application/xml", fileName);
+                return File(bytes, "application/xml", fileName);                    
             }
-
-            return BadRequest("Fialed to generate XML file.");
+            return BadRequest("Failed to generate XML file.");
         }
     }
 }

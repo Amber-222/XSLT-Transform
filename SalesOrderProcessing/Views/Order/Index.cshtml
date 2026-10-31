@@ -44,7 +44,7 @@
     <div class="card p-4 mb-4 shadow-sm">
         <h4>3. Convert Expected SO ACK JSON to XML</h4>
         <form asp-action="ConvertToXml" asp-controller="Order" enctype="multipart/form-data" method="post">
-            <input type="hidden" name="apiEndpoint" value="convert-ack-xml" />
+            <input type="hidden" name="apiEndpoint" value="convert-ack-to-xml" />
             <div class="mb-3">
                 <input type="file" name="expectedFile" class="form-control" accept=".json" required />
             </div>
