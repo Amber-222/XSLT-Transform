@@ -1,0 +1,54 @@
+﻿@model SalesOrderProcessing.Models.SalesOrder
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Sales Order Integration</h1>
+</div>
+
+<div class="card p-4 mb-4 shadow-sm">
+    <div>
+        <h4>1. Process Sales Order (SO.json)</h4>
+        <form asp-action="ProcessOrder" asp-controller="Order" enctype="multipart/form-data" method="post">
+            <div class="mb-3">
+                <input asp-for="uploadedFile" type="file" class="form-control" accept=".json" required />
+            </div>
+            <button type="submit" class="btn btn-primary">Process SO.json</button>
+        </form>
+    </div>
+
+    @if (Model != null && !string.IsNullOrEmpty(Model.successMessage))
+    {
+        <div class="alert alert-success mt-3">
+            <strong>@Model.successMessage</strong>
+            <ul class="mt-2">
+                <li><strong>@Model.SOFileName:</strong><pre class="bg-white p-2 border">@Model.SOData</pre></li>
+                <li><strong>@Model.ackFile:</strong><pre class="bg-white p-2 border">@Model.ackData</pre></li>
+            </ul>
+        </div>
+    }
+
+    <div class="card p-4 mb-4 shadow-sm">
+        <h4>2. Convert Expected SO JSON to XML</h4>
+        <form asp-action="ConvertToXml" asp-controller="Order" enctype="multipart/form-data" method="post">
+            <input type="hidden" name="apiEndpoint" value="convert-so-to-xml" />
+            <div class="mb-3">
+                <input type="file" name="expectedFile" class="form-control" accept=".json" required />
+            </div>
+            <button type="submit" class="btn btn-success">Download Expected SO.xml</button>
+        </form>
+    </div>
+
+    <div class="card p-4 mb-4 shadow-sm">
+        <h4>3. Convert Expected SO ACK JSON to XML</h4>
+        <form asp-action="ConvertToXml" asp-controller="Order" enctype="multipart/form-data" method="post">
+            <input type="hidden" name="apiEndpoint" value="convert-ack-xml" />
+            <div class="mb-3">
+                <input type="file" name="expectedFile" class="form-control" accept=".json" required />
+            </div>
+            <button type="submit" class="btn btn-success">Download Expected SO ACK.xml</button>
+        </form>
+    </div>
+</div>
