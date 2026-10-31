@@ -40,6 +40,8 @@ namespace XSLT_Transform
 
             app.UseHttpsRedirection();
 
+            app.UseStaticFiles();
+
             app.UseAuthorization();
 
 

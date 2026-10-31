@@ -50,10 +50,16 @@ namespace SalesOrderProcessing.Controllers
 
                 //get data and fields from json fiel
                 order.successMessage = json["message"]?.ToString();
+                //order.SOFileName = json["outputs"]?[0]?["fileName"]?.ToString();
+                //order.SOData = json["outputs"]?[0]?["content"]?.ToString();
+                //order.ackFile = json["outputs"]?[1]?["fileName"]?.ToString();
+                //order.ackData = json["outputs"]?[1]?["content"]?.ToString();
+
                 order.SOFileName = json["outputs"]?[0]?["fileName"]?.ToString();
-                order.SOData = json["outputs"]?[0]?["content"]?.ToString();
+                order.SOData = json["outputs"]?[0]?["url"]?.ToString();
+
                 order.ackFile = json["outputs"]?[1]?["fileName"]?.ToString();
-                order.ackData = json["outputs"]?[1]?["content"]?.ToString();
+                order.ackData = json["outputs"]?[1]?["url"]?.ToString();
             }
             else
             {
@@ -61,6 +67,25 @@ namespace SalesOrderProcessing.Controllers
             }
 
             return View("Index", order);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> DownloadFromApi(string fileUrl, string fileName)
+        {
+            if (string.IsNullOrEmpty(fileUrl))
+            {
+                return BadRequest("File Url is empty.");
+            }
+
+            try
+            {
+                var bytes = await _httpClient.GetByteArrayAsync(fileUrl);
+                return File(bytes, "application/json", fileName);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest("Couldn't get file.");
+            }
         }
 
         [HttpPost]

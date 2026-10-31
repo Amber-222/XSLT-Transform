@@ -17,6 +17,34 @@
             </div>
             <button type="submit" class="btn btn-primary">Process SO.json</button>
         </form>
+
+        @* download SO Processed *@
+        @if (!string.IsNullOrEmpty(Model.SOFileName))
+        {
+            <div class="card p-3 mb-3">
+                <h5>
+                    <a href="@Url.Action("DownloadFromApi", "Order", new { fileUrl = Model.SOData, fileName = Model.SOFileName })"
+                       class="btn btn-success text-decoration-none">
+                        📥 Download @Model.SOFileName
+                    </a>
+                </h5>
+            </div>
+        }
+
+        @* download ACK *@
+        @if (!string.IsNullOrEmpty(Model.ackFile))
+        {
+            <div class="card p-3 mb-3">
+                <h5>
+                    <a href="@Url.Action("DownloadFromApi", "Order", new { fileUrl = Model.ackData, fileName = Model.ackFile })"
+                       class="btn btn-success text-decoration-none">
+                        📥 Download @Model.ackFile
+                    </a>
+                </h5>
+                <pre><code>@Model.ackData</code></pre>
+            </div>
+        }
+
     </div>
 
     @if (Model != null && !string.IsNullOrEmpty(Model.successMessage))

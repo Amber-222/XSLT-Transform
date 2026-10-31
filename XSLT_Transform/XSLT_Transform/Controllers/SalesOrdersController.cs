@@ -47,14 +47,30 @@ namespace XSLT_Transform.Controllers
             //match naming cnvention:  orderRef + “-” + internalRef + “-” + currentDate + “. json”
             string ackFile = $"{format.OrderRef}-{format.InternalRef}-{currentDate}.json";
 
+            //RETRIEVE PROCESSED JSONS
+            string saveFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "processed");
+
+            if (!Directory.Exists(saveFolder)) {
+                Directory.CreateDirectory(saveFolder);  
+            }
+
+            string soFilePath = Path.Combine(saveFolder, soFile);
+            string ackFilePath = Path.Combine(saveFolder,ackFile);
+
+            await System.IO.File.WriteAllTextAsync(soFilePath, expSO, Encoding.UTF8);
+            await System.IO.File.WriteAllTextAsync(ackFilePath, expAckSO, Encoding.UTF8);
+
+            string baseUrl = $"{Request.Scheme}://{Request.Host}";
+            string soUrl = $"{baseUrl}/processed/{soFile}";
+            string ackUrl = $"{baseUrl}/processed/{ackFile}";
             //return the files to show processing was success
             return Ok(new
             {
                 Message = "Processed sales order successfully.",
                 Outputs = new[]
                 {
-                    new { FileName = soFile, Content = expSO},
-                    new { FileName = ackFile, Content = expAckSO},
+                    new { FileName = soFile, Url = soUrl},
+                    new { FileName = ackFile, Url = ackUrl},
                 }
             });
         }

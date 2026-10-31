@@ -1,0 +1,6 @@
+{
+  "orderReference": "JAS-998822",
+  "internalReference": "INT-ACK-4455",
+  "acknowledgementStatus": "ACCEPTED",
+  "message": "Sales order acknowledgement generated successfully."
+}
